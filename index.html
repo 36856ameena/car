@@ -4,250 +4,344 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AETHER | Engineering Beyond Gravity</title>
-    <!-- Tailwind CSS for Layout & Styling -->
+    <!-- Tailwind CSS v4 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- GSAP for Smooth 3D Floating & Animations -->
+    <!-- GSAP Core for Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@200;300;400;500&display=swap');
         
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #030303;
-            color: #e5e5e5;
+            background-color: #050505;
+            color: #b3b3b3;
             overflow-x: hidden;
         }
         .font-serif-lux { font-family: 'Cinzel', serif; }
         
-        /* Premium Golden Glows matching the reference image */
+        /* Exact color matches from the design */
+        .text-gold { color: #cda25b; }
+        .border-gold { border-color: rgba(205, 162, 91, 0.3); }
+        .border-gold-bright { border-color: rgba(205, 162, 91, 0.6); }
+        .bg-dark-card { background-color: rgba(10, 10, 10, 0.75); }
+        
+        /* Smooth glowing effects */
         .gold-glow {
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.45);
-        }
-        .border-gold { border-color: rgba(212, 175, 55, 0.35); }
-        .text-gold { color: #d4af37; }
-        .bg-gold-gradient {
-            background: linear-gradient(135deg, #1a1508 0%, #050505 100%);
+            text-shadow: 0 0 20px rgba(205, 162, 91, 0.35);
         }
         
-        /* Smooth navigation page state machine */
-        .page-section {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        .page-section.active {
-            display: block;
-            opacity: 1;
-        }
+        /* Custom scrollbar to keep layout clean */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #cda25b; }
+
+        html { scroll-behavior: smooth; }
     </style>
 </head>
-<body class="relative min-h-screen selection:bg-amber-500/20 selection:text-amber-300">
+<body class="relative min-h-screen">
 
-    <!-- Atmospheric Hallway Luxury Background (Classical architecture tinted to gold/black) -->
-    <div class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none" 
-         style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80'); filter: contrast(125%) brightness(0.18) sepia(40%) hue-rotate(5deg) saturate(110%);">
+    <!-- FIXED HERO BACKGROUND LAYER (The Cathedral Hall) -->
+    <div class="fixed inset-0 z-0 bg-cover bg-center pointer-events-none opacity-40 mix-blend-screen" 
+         style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80'); filter: sepia(30%) brightness(0.25) contrast(110%);">
     </div>
-    
-    <!-- Deep Vignette Overlay to maintain dark look -->
-    <div class="absolute inset-0 z-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80 pointer-events-none"></div>
+    <!-- Vignette shade overlay -->
+    <div class="fixed inset-0 z-0 bg-gradient-to-b from-black/60 via-transparent to-[#050505] pointer-events-none"></div>
 
-    <!-- Header Navigation -->
-    <header class="fixed top-0 left-0 w-full z-50 px-6 py-5 md:px-12 flex justify-between items-center backdrop-blur-md bg-black/40 border-b border-white/5">
-        <div class="text-xl md:text-2xl font-serif-lux tracking-[0.25em] text-white gold-glow font-bold">AETHER</div>
+    <!-- HEADER NAVIGATION -->
+    <header class="fixed top-0 left-0 w-full z-50 px-6 py-6 md:px-16 flex justify-between items-center backdrop-blur-md bg-black/30 border-b border-white/5">
+        <div class="text-xl md:text-2xl font-serif-lux tracking-[0.3em] text-white font-medium">AETHER</div>
         
-        <nav class="hidden md:flex space-x-10 text-xs tracking-[0.2em] uppercase font-medium text-gray-400">
-            <button onclick="switchPage('home')" class="nav-btn text-white hover:text-gold transition-colors duration-300 cursor-pointer">Home</button>
-            <button onclick="switchPage('about')" class="nav-btn hover:text-gold transition-colors duration-300 cursor-pointer">About</button>
-            <button onclick="switchPage('services')" class="nav-btn hover:text-gold transition-colors duration-300 cursor-pointer">Services</button>
+        <nav class="hidden md:flex space-x-10 text-[11px] tracking-[0.25em] uppercase font-light text-gray-400">
+            <a href="#home" class="hover:text-white transition-colors duration-300">Home</a>
+            <a href="#about" class="hover:text-white transition-colors duration-300">About</a>
+            <a href="#services" class="hover:text-white transition-colors duration-300">Services</a>
+            <a href="#mydetails" class="hover:text-white transition-colors duration-300">My Details</a>
         </nav>
 
-        <button onclick="switchPage('about')" class="border border-gold text-gold text-[10px] uppercase tracking-[0.2em] px-6 py-2.5 hover:bg-amber-500/10 transition-all duration-300 rounded-sm font-semibold cursor-pointer">
+        <a href="#contact" class="border border-gold text-gold text-[10px] uppercase tracking-[0.25em] px-6 py-2.5 hover:bg-[#cda25b]/10 transition-all duration-300 rounded-full font-medium">
             Contact
-        </button>
+        </a>
     </header>
 
-    <!-- Social Sidebar -->
-    <div class="fixed left-6 top-1/2 -translate-y-1/2 z-40 hidden flex-col space-y-8 text-gray-500 text-xs tracking-widest xl:flex">
-        <a href="#" class="hover:text-gold transition-colors rotate-270 my-2">INSTAGRAM</a>
-        <a href="#" class="hover:text-gold transition-colors rotate-270 my-2">LINKEDIN</a>
-        <a href="#" class="hover:text-gold transition-colors rotate-270 my-2">GITHUB</a>
+    <!-- FIXED SOCIAL SIDEBAR -->
+    <div class="fixed left-8 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col space-y-8 text-gray-500 text-[10px] tracking-[0.3em]">
+        <a href="#" class="hover:text-gold transition-colors duration-300 [writing-mode:vertical-lr] rotate-180">INSTAGRAM</a>
+        <a href="#" class="hover:text-gold transition-colors duration-300 [writing-mode:vertical-lr] rotate-180">LINKEDIN</a>
+        <a href="#" class="hover:text-gold transition-colors duration-300 [writing-mode:vertical-lr] rotate-180">GITHUB</a>
     </div>
 
-    <!-- Main Dynamic Content Wrapper -->
-    <main class="relative z-10 pt-28 min-h-screen flex flex-col justify-between">
-        
-        <!-- ================= HOME SECTION ================= -->
-        <section id="home" class="page-section active px-6 md:px-20 lg:px-24 py-4">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center min-h-[68vh]">
+    <!-- MAIN SCROLLING CONTENT -->
+    <main class="relative z-10 w-full">
+
+        <!-- ================= SECTION 1: HERO HOME ================= -->
+        <section id="home" class="min-h-screen px-6 md:px-16 lg:px-24 flex flex-col justify-between pt-32 pb-12">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto">
                 
-                <!-- Brand Title and Details Column -->
-                <div class="lg:col-span-5 flex flex-col justify-center space-y-7 z-20 order-2 lg:order-1">
-                    <p class="text-[10px] uppercase tracking-[0.35em] text-gold/90 font-bold font-serif-lux">Engineering Beyond Gravity</p>
-                    <h1 class="text-6xl md:text-8xl font-serif-lux font-bold tracking-widest text-white leading-none gold-glow">
+                <!-- Left Title block -->
+                <div class="lg:col-span-5 space-y-6 z-20 order-2 lg:order-1 mt-8 lg:mt-0">
+                    <p class="text-[10px] uppercase tracking-[0.4em] text-gold font-medium font-serif-lux">Engineering Beyond Gravity</p>
+                    <h1 class="text-6xl md:text-8xl font-serif-lux font-normal tracking-[0.1em] text-white leading-none">
                         AETHER
                     </h1>
                     <p class="text-gray-400 text-xs md:text-sm max-w-sm leading-relaxed font-light tracking-wide">
-                        Where engineering meets art. Defying limits. Redefining luxury. Experience performance track cars suspended beautifully inside bespoke luxury spaces.
+                        Where engineering meets art. Defying limits. Redefining luxury.
                     </p>
-                    <div class="flex items-center space-x-8 pt-2">
-                        <button onclick="switchPage('services')" class="border border-white/80 text-white text-[10px] uppercase tracking-[0.25em] px-9 py-4 hover:bg-white hover:text-black transition-all duration-300 font-medium tracking-widest cursor-pointer">
+                    <div class="flex items-center space-x-8 pt-4">
+                        <a href="#services" class="border border-white/40 text-white text-[10px] uppercase tracking-[0.3em] px-10 py-4 hover:bg-white hover:text-black hover:border-white transition-all duration-400 font-medium">
                             Explore
-                        </button>
-                        <a href="#" class="flex items-center space-x-4 text-[10px] uppercase tracking-[0.25em] text-gray-300 hover:text-gold transition-colors duration-300 font-medium">
-                            <span class="w-9 h-9 rounded-full border border-gold/30 flex items-center justify-center text-[9px] bg-black/40">▶</span>
-                            <span>Watch Showreel</span>
+                        </a>
+                        <a href="#" class="flex items-center space-x-4 text-[10px] uppercase tracking-[0.25em] text-gray-300 hover:text-gold transition-colors duration-300">
+                            <span class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-[10px] bg-white/5 backdrop-blur-sm">▶</span>
+                            <span class="tracking-[0.3em]">Watch Showreel</span>
                         </a>
                     </div>
                 </div>
 
-                <!-- 3D Interactive Floating Car Container (Gold Flare + Porsche GT3) -->
-                <div class="lg:col-span-7 flex justify-center items-center relative min-h-[380px] lg:min-h-[580px] order-1 lg:order-2">
-                    <!-- Concentrated rich gold light glow setting directly behind vehicle frame -->
-                    <div class="absolute w-80 h-80 md:w-[450px] md:h-[450px] bg-amber-600/15 rounded-full blur-[120px] pointer-events-none mix-blend-screen"></div>
+                <!-- Center/Right Interactive 3D Vehicle Block -->
+                <div class="lg:col-span-7 flex justify-center items-center relative min-h-[350px] lg:min-h-[550px] order-1 lg:order-2">
+                    <!-- Amber glow right behind the car frame -->
+                    <div class="absolute w-72 h-72 md:w-[480px] md:h-[480px] bg-[#cda25b]/10 rounded-full blur-[140px] pointer-events-none mix-blend-screen"></div>
                     
-                    <!-- Floating Assembly Block -->
-                    <div id="floating-car-container" class="relative w-full max-w-xl cursor-grab active:cursor-grabbing transform transition-transform duration-300">
-                        <!-- Structural Ceiling Suspension Wires Visuals -->
-                        <div class="absolute top-[-180px] left-[32%] w-[1px] h-[220px] bg-gradient-to-b from-transparent via-amber-500/20 to-amber-500/50"></div>
-                        <div class="absolute top-[-220px] right-[40%] w-[1px] h-[260px] bg-gradient-to-b from-transparent via-amber-500/20 to-amber-500/50"></div>
+                    <!-- Mouse Interaction Container -->
+                    <div id="interactive-car-stage" class="relative w-full max-w-xl transition-transform duration-300 ease-out">
+                        <!-- Rigid suspension lines coming from roof -->
+                        <div class="absolute top-[-250px] left-[35%] w-[1px] h-[300px] bg-gradient-to-b from-transparent via-white/10 to-white/40"></div>
+                        <div class="absolute top-[-250px] right-[42%] w-[1px] h-[320px] bg-gradient-to-b from-transparent via-white/10 to-white/40"></div>
                         
-                        <!-- High Quality High-Performance Car with Transparent Background -->
+                        <!-- High Performance Track Car Asset -->
                         <img id="car-image" src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80" 
-                             alt="Suspended Porsche" 
-                             class="w-full h-auto object-contain drop-shadow-[0_45px_50px_rgba(0,0,0,0.95)] contrast-[110%] brightness-[105%] mix-blend-lighten">
+                             alt="Aether Porsche Suspended" 
+                             class="w-full h-auto object-contain drop-shadow-[0_50px_60px_rgba(0,0,0,0.9)] contrast-[105%] brightness-[100%] mix-blend-lighten">
                         
-                        <!-- Active telemetry UI layer overlaying image -->
-                        <div class="absolute bottom-12 right-6 bg-black/80 backdrop-blur-md border border-gold/40 text-[8px] tracking-[0.3em] text-gold px-4 py-1.5 rounded-sm font-bold">
-                            SYS.GRAVITY // NULL-04
+                        <!-- UI Tag -->
+                        <div class="absolute bottom-8 right-4 bg-black/90 backdrop-blur-md border border-gold/30 text-[8px] tracking-[0.3em] text-gold px-4 py-1.5 rounded-sm">
+                            01 / 04
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            <!-- Features Bar Base -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-8 mt-12 text-left">
-                <div>
-                    <h4 class="text-[11px] font-serif-lux uppercase tracking-widest text-gold font-bold">01 / Precision</h4>
-                    <p class="text-[11px] text-gray-500 mt-1 font-light">Every detail is meticulously crafted.</p>
+            <!-- Horizontal Grid Icons/Features Footer -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-10 mt-12">
+                <div class="space-y-2">
+                    <h4 class="text-[11px] font-serif-lux uppercase tracking-widest text-white font-medium">Precision</h4>
+                    <p class="text-[11px] text-gray-500 font-light">Every detail is meticulously crafted.</p>
                 </div>
-                <div>
-                    <h4 class="text-[11px] font-serif-lux uppercase tracking-widest text-gold font-bold">02 / Innovation</h4>
-                    <p class="text-[11px] text-gray-500 mt-1 font-light">Pushing technology to the absolute limits.</p>
+                <div class="space-y-2">
+                    <h4 class="text-[11px] font-serif-lux uppercase tracking-widest text-white font-medium">Innovation</h4>
+                    <p class="text-[11px] text-gray-500 font-light">Pushing technology to the next level.</p>
                 </div>
-                <div>
-                    <h4 class="text-[11px] font-serif-lux uppercase tracking-widest text-gold font-bold">03 / Excellence</h4>
-                    <p class="text-[11px] text-gray-500 mt-1 font-light">Committed to delivering pristine safety.</p>
+                <div class="space-y-2">
+                    <h4 class="text-[11px] font-serif-lux uppercase tracking-widest text-white font-medium">Excellence</h4>
+                    <p class="text-[11px] text-gray-500 font-light">Committed to delivering the highest quality.</p>
                 </div>
-                <div>
-                    <h4 class="text-[11px] font-serif-lux uppercase tracking-widest text-gold font-bold">04 / Passion</h4>
-                    <p class="text-[11px] text-gray-500 mt-1 font-light">Driven by aesthetics, inspired by speed.</p>
+                <div class="space-y-2">
+                    <h4 class="text-[11px] font-serif-lux uppercase tracking-widest text-white font-medium">Passion</h4>
+                    <p class="text-[11px] text-gray-500 font-light">Driven by passion, inspired by dreams.</p>
                 </div>
             </div>
         </section>
 
 
-        <!-- ================= ABOUT SECTION ================= -->
-        <section id="about" class="page-section px-6 md:px-24 py-12 max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl md:text-5xl font-serif-lux text-white tracking-[0.25em] mb-6 gold-glow">ABOUT AETHER</h2>
-            <p class="text-gray-400 leading-relaxed text-xs md:text-sm mb-10 max-w-2xl mx-auto font-light tracking-wide">
-                AETHER transforms elite automotive engineering into suspended interior centerpieces. Using custom high-tensile rigging configurations, we float sports cars inside luxury multi-story glass halls, galleries, and residential living structures securely.
-            </p>
-            <div class="inline-block p-8 bg-gold-gradient border border-gold/20 backdrop-blur-md rounded-sm max-w-md text-left shadow-2xl">
-                <div class="flex items-center space-x-5 mb-4">
-                    <div class="w-14 h-14 rounded-full bg-amber-500/10 border border-gold/40 flex items-center justify-center font-serif-lux text-gold font-bold text-lg">BA</div>
-                    <div>
-                        <h4 class="text-sm font-bold text-white tracking-wider">BIBI AMEENA</h4>
-                        <p class="text-[10px] text-gold tracking-widest uppercase mt-0.5">Lead UI Developer & Designer</p>
+        <!-- ================= SECTION 2: ABOUT ================= -->
+        <section id="about" class="min-h-screen px-6 md:px-16 lg:px-24 flex flex-col justify-center items-center py-24 bg-gradient-to-b from-transparent to-black/80">
+            <div class="max-w-3xl text-center space-y-8">
+                <p class="text-[10px] uppercase tracking-[0.4em] text-gold font-medium font-serif-lux">The story behind AETHER</p>
+                <h2 class="text-4xl md:text-5xl font-serif-lux font-normal text-white tracking-[0.2em] gold-glow">ABOUT</h2>
+                <p class="text-gray-400 leading-relaxed font-light text-sm md:text-base max-w-2xl mx-auto">
+                    AETHER is not just about cars. It's about vision, innovation and pushing boundaries. Inspired by the impossible, built with passion. We conceptualize zero-gravity architectural layouts that house dynamic structural high-performance assets directly within customized premium estates.
+                </p>
+                <div class="pt-4">
+                    <a href="#services" class="border border-gold text-gold text-[10px] uppercase tracking-[0.3em] px-8 py-3.5 hover:bg-[#cda25b]/10 transition-all duration-300">
+                        Read More
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 3: SERVICES ================= -->
+        <section id="services" class="min-h-screen px-6 md:px-16 lg:px-24 flex flex-col justify-center py-24 bg-black/90">
+            <div class="text-center mb-16 space-y-2">
+                <h2 class="text-3xl md:text-4xl font-serif-lux font-normal text-white tracking-[0.25em]">SERVICES</h2>
+                <p class="text-[10px] text-gray-500 uppercase tracking-[0.3em] font-light">What I do</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto w-full">
+                <!-- Card 1 -->
+                <div class="bg-white/[0.02] border border-white/5 p-8 flex flex-col justify-between items-start rounded-sm hover:border-gold/30 transition-all duration-500 group">
+                    <div class="space-y-4">
+                        <div class="text-gold text-lg group-hover:scale-110 transition-transform duration-300">⬦</div>
+                        <h3 class="text-[13px] font-serif-lux text-white tracking-widest uppercase font-medium">Automotive Design</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed font-light">Crafting futuristic automotive concepts.</p>
                     </div>
                 </div>
-                <p class="text-xs text-gray-400 leading-relaxed font-light">
-                    Engineering interactive high-end digital showcases using bleeding-edge layout structures, advanced 3D mechanics, and fluid animation frameworks.
-                </p>
+                <!-- Card 2 -->
+                <div class="bg-white/[0.02] border border-white/5 p-8 flex flex-col justify-between items-start rounded-sm hover:border-gold/30 transition-all duration-500 group">
+                    <div class="space-y-4">
+                        <div class="text-gold text-lg group-hover:scale-110 transition-transform duration-300">⬦</div>
+                        <h3 class="text-[13px] font-serif-lux text-white tracking-widest uppercase font-medium">3D Visualization</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed font-light">Bringing ideas to life with stunning 3D.</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white/[0.02] border border-white/5 p-8 flex flex-col justify-between items-start rounded-sm hover:border-gold/30 transition-all duration-500 group">
+                    <div class="space-y-4">
+                        <div class="text-gold text-lg group-hover:scale-110 transition-transform duration-300">⬦</div>
+                        <h3 class="text-[13px] font-serif-lux text-white tracking-widest uppercase font-medium">Engineering Concepts</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed font-light">Turning imagination into engineering.</p>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-white/[0.02] border border-white/5 p-8 flex flex-col justify-between items-start rounded-sm hover:border-gold/30 transition-all duration-500 group">
+                    <div class="space-y-4">
+                        <div class="text-gold text-lg group-hover:scale-110 transition-transform duration-300">⬦</div>
+                        <h3 class="text-[13px] font-serif-lux text-white tracking-widest uppercase font-medium">Luxury Architecture</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed font-light">Designing spaces that inspire and elevate.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <a href="#contact" class="border border-white/20 text-white text-[10px] uppercase tracking-[0.25em] px-8 py-3.5 hover:border-white transition-all duration-300 font-light">
+                    View All Services
+                </a>
             </div>
         </section>
 
 
-        <!-- ================= SERVICES SECTION ================= -->
-        <section id="services" class="page-section px-6 md:px-24 py-12">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-serif-lux text-white tracking-[0.25em] gold-glow">OUR EXPERTISE</h2>
-                <p class="text-[10px] text-gold uppercase tracking-[0.3em] mt-3 font-semibold">Bespoke Structural Solutions</p>
+        <!-- ================= SECTION 4: MY DETAILS ================= -->
+        <section id="mydetails" class="min-h-screen px-6 md:px-16 lg:px-24 flex flex-col justify-center items-center py-24 bg-gradient-to-b from-black/90 to-[#050505]">
+            <div class="text-center mb-12 space-y-2">
+                <h2 class="text-3xl md:text-4xl font-serif-lux font-normal text-white tracking-[0.25em]">MY DETAILS</h2>
+                <p class="text-[10px] text-gray-500 uppercase tracking-[0.3em] font-light">Let's connect</p>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <div class="bg-gold-gradient p-8 border border-white/5 rounded-sm hover:border-gold/40 transition-all duration-500 shadow-xl group">
-                    <span class="text-xl text-gold group-hover:gold-glow transition-all">✦</span>
-                    <h3 class="text-md font-serif-lux text-white tracking-widest mt-5 mb-2.5">Automotive Rigging</h3>
-                    <p class="text-xs text-gray-400 leading-relaxed font-light">Zero-stress structural design explicitly engineered to suspend chassis configurations cleanly from luxury indoor ceiling joists.</p>
+
+            <!-- Profile Info Spec Block exact match -->
+            <div class="w-full max-w-2xl bg-white/[0.01] border border-white/5 backdrop-blur-md p-8 md:p-10 rounded-sm grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                
+                <!-- Left Avatar/Intro Bio -->
+                <div class="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-4">
+                    <div class="w-20 h-20 rounded-full border border-gold/40 bg-gray-800 overflow-hidden">
+                        <!-- Generic premium portrait placeholder matching style layout -->
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Bibi Ameena" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h3 class="text-white font-medium tracking-wide text-md">BIBI AMEENA</h3>
+                        <p class="text-[11px] text-gold tracking-widest uppercase font-light mt-0.5">Front-End Developer / UI/UX Enthusiast</p>
+                    </div>
+                    <p class="text-[11px] text-gray-500 leading-relaxed font-light">
+                        I build immersive, responsive and high-performance websites with modern technologies.
+                    </p>
+                    <!-- Small Social Row -->
+                    <div class="flex space-x-4 text-gray-500 text-xs pt-2">
+                        <a href="#" class="hover:text-white">ln</a>
+                        <a href="#" class="hover:text-white">gh</a>
+                        <a href="#" class="hover:text-white">ig</a>
+                        <a href="#" class="hover:text-white">tw</a>
+                    </div>
                 </div>
-                <div class="bg-gold-gradient p-8 border border-white/5 rounded-sm hover:border-gold/40 transition-all duration-500 shadow-xl group">
-                    <span class="text-xl text-gold group-hover:gold-glow transition-all">✦</span>
-                    <h3 class="text-md font-serif-lux text-white tracking-widest mt-5 mb-2.5">Spatial Architecture</h3>
-                    <p class="text-xs text-gray-400 leading-relaxed font-light">Designing internal residential environments that balance foundational load distribution with minimalist gallery aesthetics.</p>
+
+                <!-- Right Raw Metrics Spec List -->
+                <div class="md:col-span-7 border-t md:border-t-0 md:border-l border-white/5 pt-6 md:pt-0 md:pl-8 space-y-4 text-[11px] tracking-wide">
+                    <div class="flex justify-between py-1 border-b border-white/[0.03]">
+                        <span class="text-gray-500 font-light uppercase tracking-wider">Age</span>
+                        <span class="text-white font-medium">20</span>
+                    </div>
+                    <div class="flex justify-between py-1 border-b border-white/[0.03]">
+                        <span class="text-gray-500 font-light uppercase tracking-wider">Location</span>
+                        <span class="text-white font-medium">India</span>
+                    </div>
+                    <div class="flex justify-between py-1 border-b border-white/[0.03]">
+                        <span class="text-gray-500 font-light uppercase tracking-wider">Email</span>
+                        <span class="text-gold font-medium select-all">ameerabibi@example.com</span>
+                    </div>
+                    <div class="flex justify-between py-1 border-b border-white/[0.03]">
+                        <span class="text-gray-500 font-light uppercase tracking-wider">Phone</span>
+                        <span class="text-white font-medium">+91 98765 43210</span>
+                    </div>
+                    <div class="flex justify-between py-1">
+                        <span class="text-gray-500 font-light uppercase tracking-wider">Freelance</span>
+                        <span class="text-emerald-500 font-medium tracking-widest uppercase text-[10px]">Available</span>
+                    </div>
+
+                    <div class="pt-4">
+                        <button class="w-full border border-white/20 text-white uppercase text-[10px] tracking-[0.25em] py-3 text-center hover:bg-white hover:text-black transition-all duration-300 font-medium cursor-pointer">
+                            Download CV
+                        </button>
+                    </div>
                 </div>
-                <div class="bg-gold-gradient p-8 border border-white/5 rounded-sm hover:border-gold/40 transition-all duration-500 shadow-xl group">
-                    <span class="text-xl text-gold group-hover:gold-glow transition-all">✦</span>
-                    <h3 class="text-md font-serif-lux text-white tracking-widest mt-5 mb-2.5">Luminescent Framing</h3>
-                    <p class="text-xs text-gray-400 leading-relaxed font-light">Custom directional downlighting array parameters casting clean shadows that trace your car's geometric body outline perfectly.</p>
+
+            </div>
+        </section>
+
+
+        <!-- ================= SECTION 5: CONTACT ================= -->
+        <section id="contact" class="h-[60vh] px-6 md:px-16 lg:px-24 flex flex-col justify-center items-center py-20 bg-[#050505] relative overflow-hidden">
+            <!-- Subtle car tail light backing visual at base footer -->
+            <div class="absolute bottom-0 w-full max-w-3xl opacity-20 pointer-events-none mix-blend-lighten">
+                <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80" alt="" class="w-full h-auto object-cover">
+            </div>
+
+            <div class="z-20 text-center space-y-6 max-w-lg">
+                <h2 class="text-2xl md:text-3xl font-serif-lux font-normal text-white tracking-[0.2em]">LET'S WORK TOGETHER</h2>
+                <p class="text-[11px] text-gray-500 tracking-widest font-light uppercase">Have a project in mind?</p>
+                <div class="pt-2">
+                    <a href="mailto:ameerabibi@example.com" class="border border-gold text-gold text-[10px] uppercase tracking-[0.3em] px-10 py-4 hover:bg-[#cda25b] hover:text-black transition-all duration-400 font-semibold rounded-sm">
+                        Get In Touch
+                    </a>
                 </div>
             </div>
         </section>
 
-        <!-- Premium Footer Layout -->
-        <footer class="w-full text-center py-6 text-[9px] text-gray-600 tracking-[0.3em] uppercase border-t border-white/5 mt-auto">
-            © 2026 AETHER. All Rights Reserved.
+        <!-- FOOTER BAR -->
+        <footer class="w-full text-center py-8 text-[9px] text-gray-600 tracking-[0.3em] uppercase border-t border-white/5 bg-black">
+            <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <span>© 2026 AETHER. All Rights Reserved.</span>
+                <a href="#home" class="hover:text-white transition-colors">Back to top ↑</a>
+            </div>
         </footer>
     </main>
 
-    <!-- JavaScript For Interactivity, Pages, and 3D floating mechanics -->
+    <!-- INTERACTIVE PHYSICS & TRACKING LOGIC -->
     <script>
-        // 1. Navigation Control Engine
-        function switchPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            const activeSection = document.getElementById(pageId);
-            if(activeSection) {
-                activeSection.classList.add('active');
-            }
-            // Trigger quick layout refresh movement animation via GSAP
-            gsap.fromTo(`#${pageId}`, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" });
-        }
-
-        // 2. GSAP Zero-Gravity Idle Floating Loop
-        gsap.to("#floating-car-container", {
-            y: -22,
-            rotationZ: 1.2,
-            rotationX: 2.5,
-            duration: 4.5,
+        // 1. Smooth Fluid Idle Floating Loop (Zero Gravity Mechanics)
+        gsap.to("#interactive-car-stage", {
+            y: -25,
+            rotationZ: 1.5,
+            rotationX: 3,
+            duration: 5,
             ease: "sine.inOut",
             yoyo: true,
             repeat: -1
         });
 
-        // 3. Dynamic Mouse Vector Tracking 3D Effect
-        const elementContainer = document.getElementById('floating-car-container');
+        // 2. Exact Mouse-Interactive Rotation Engine
+        const stage = document.getElementById('interactive-car-stage');
         
-        window.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 20;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 20;
+        window.addEventListener('mousemove', (event) => {
+            // Calculate relative offset metrics from center viewport bounds
+            const widthFactor = (window.innerWidth / 2 - event.pageX) / 22;
+            const heightFactor = (window.innerHeight / 2 - event.pageY) / 22;
             
-            gsap.to(elementContainer, {
-                rotationY: xAxis,
-                rotationX: -yAxis,
-                duration: 0.9,
-                ease: "power1.out"
+            // Render 3D geometric transformations
+            gsap.to(stage, {
+                rotationY: widthFactor,
+                rotationX: -heightFactor,
+                transformPerspective: 1200,
+                duration: 0.8,
+                ease: "power2.out"
             });
         });
 
-        // Snap smoothly back to center alignment on mouse exit
+        // Graceful reset function when pointer vector leaves screen perimeter
         window.addEventListener('mouseleave', () => {
-            gsap.to(elementContainer, {
+            gsap.to(stage, {
                 rotationY: 0,
                 rotationX: 0,
-                duration: 1.4,
-                ease: "power2.out"
+                duration: 1.5,
+                ease: "power3.out"
             });
         });
     </script>
